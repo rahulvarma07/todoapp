@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todoproj/firebase_options.dart';
 import 'package:todoproj/homepage.dart';
+import 'package:todoproj/loginOrsignup.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Homepage(),
+      debugShowCheckedModeBanner: false,
+      home: LoginOrSignUp(),
     );
   }
 }
