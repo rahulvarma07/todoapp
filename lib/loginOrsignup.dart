@@ -2,6 +2,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:todoproj/homepage.dart';
 
 class SignUp extends StatefulWidget {
   final void Function()? onTap;
@@ -66,6 +68,15 @@ class _SignUpState extends State<SignUp> {
           ),
 
           GestureDetector(
+            onTap: (){
+              if(
+                 eMail.text.trim().isNotEmpty &&
+                 passWord.text.trim().length >= 6 &&
+                 passWord.text.trim() == CnfrmPassWord.text.trim()
+              ){
+                CreateAcc();
+              }
+            },
             child: Container(
               height: 60,
               width: 140,
@@ -93,6 +104,18 @@ class _SignUpState extends State<SignUp> {
         ],
       ),
     );
+  }
+  Future<void> CreateAcc() async{
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: eMail.text.trim(),
+        password: passWord.text.trim(),
+    ).then((val){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>SignIn(onTap: (){})));
+    }).onError((err, stackTrace){
+      if(err is FirebaseAuthException){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err.code.toString()), backgroundColor: Colors.blue,));
+      }
+    });
   }
 }
 
@@ -145,6 +168,13 @@ class _SignInState extends State<SignIn> {
           ),
 
           GestureDetector(
+            onTap: (){
+              if(eMaill.text.trim().isNotEmpty
+               && passWordd.text.trim().length >= 6
+              ){
+                CreatedAcc();
+              }
+            },
             child: Container(
               height: 60,
               width: 140,
@@ -173,6 +203,17 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+  Future<void> CreatedAcc() async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: eMaill.text.trim(),
+        password: passWordd.text.trim()
+    ).then((val){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> Homepage()));
+    }).onError((err, stackTrace){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err.toString())));
+    });
+  }
+
 }
 
 
