@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:todoproj/AuthGate.dart';
 import 'package:todoproj/firebase_options.dart';
-import 'package:todoproj/homepage.dart';
-import 'package:todoproj/loginOrsignup.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -23,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginOrSignUp(),
+      home: AuthCheck(),
     );
   }
 }

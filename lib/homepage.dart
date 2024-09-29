@@ -17,9 +17,14 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notes Application"),
+        title: Text("Notes Application", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         backgroundColor: Colors.blue,
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.pop(context);
+          }, icon: Icon(Icons.logout, color: Colors.white,)),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -29,34 +34,22 @@ class _HomepageState extends State<Homepage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text("Todo"),
+                    Text("NOTES"),
                     TextField(
                       controller: taskCont,
                       decoration: InputDecoration(
                         hintText: "Enter the Task",
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
                     ),
-                    SizedBox(height: 10,),
-                    TextField(
-                      controller: noteCont,
-                      decoration: InputDecoration(
-                        hintText: "Enter a note",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                      ),
-                    ),
+
                     SizedBox(height: 10,),
                     GestureDetector(
                       onTap: () async{
-                        if(taskCont.text.trim().isNotEmpty && noteCont.text.trim().isNotEmpty){
-                          await FirebaseOpt().addNotes(taskCont.text.trim(), noteCont.text.trim());
-                        }
-                        else if(taskCont.text.trim().isNotEmpty && noteCont.text.trim().isEmpty){
-                          await FirebaseOpt().addNotes(taskCont.text.trim(), "No Note Added");
+                        if(taskCont.text.trim().isNotEmpty){
+                          await FirebaseOpt().addNotes(taskCont.text.trim());
                         }
                       },
                       child: Container(
@@ -76,8 +69,38 @@ class _HomepageState extends State<Homepage> {
             )
           );
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white,),
         backgroundColor: Colors.blue,
+      ),
+      body: StreamBuilder(
+        stream: FirebaseOpt().readAllData(),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (con, ind){
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                     // side: BorderSide(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    tileColor: Colors.lightBlue,
+                    textColor: Colors.black,
+                    title: Text("Notes"),
+                    subtitle: Text("${snapshot.data!.docs[ind]["Notes"]}"),
+                  ),
+                );
+              },
+            );
+          }
+          else{
+            return Center(
+              child: Text("Add a note..."),
+            );
+          }
+        },
       ),
     );
   }

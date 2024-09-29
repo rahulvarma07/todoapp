@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:todoproj/AuthGate.dart';
 import 'package:todoproj/homepage.dart';
 
 class SignUp extends StatefulWidget {
@@ -110,7 +111,7 @@ class _SignUpState extends State<SignUp> {
         email: eMail.text.trim(),
         password: passWord.text.trim(),
     ).then((val){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>SignIn(onTap: (){})));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>AuthCheck()));
     }).onError((err, stackTrace){
       if(err is FirebaseAuthException){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err.code.toString()), backgroundColor: Colors.blue,));
@@ -208,7 +209,8 @@ class _SignInState extends State<SignIn> {
         email: eMaill.text.trim(),
         password: passWordd.text.trim()
     ).then((val){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> Homepage()));
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> AuthCheck()));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Welcome")));
     }).onError((err, stackTrace){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err.toString())));
     });
